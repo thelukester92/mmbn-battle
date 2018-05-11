@@ -16,8 +16,4 @@ function Entity:has(type)
     return self[type] ~= nil
 end
 
-function Entity:get(type)
-    return self[type]
-end
-
 return Entity

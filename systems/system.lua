@@ -7,6 +7,9 @@ function System:new()
     return o
 end
 
+function System:load()
+end
+
 function System:accepts(e)
     return false
 end
@@ -18,6 +21,9 @@ function System:onEntityAdded(e)
 end
 
 function System:onAcceptedEntityAdded(e)
+end
+
+function System:draw()
 end
 
 function System:update(dt)
