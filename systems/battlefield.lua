@@ -8,7 +8,16 @@ setmetatable(Battlefield, System)
 function Battlefield:new()
     local o = System:new()
     setmetatable(o, self)
+    o.entities = {}
     return o
+end
+
+function Battlefield:accepts(e)
+    return e:has('grid_position')
+end
+
+function Battlefield:onAcceptedEntityAdded(e)
+    table.insert(self.entities, e)
 end
 
 function Battlefield:load(world)
@@ -44,6 +53,13 @@ function Battlefield:load(world)
             drawable={texture='battlefield', frame='blu_btm'},
             position={x=x, y=148}
         })
+    end
+end
+
+function Battlefield:update(dt)
+    for _, e in pairs(self.entities) do
+        e.position.x = 100 + 40 * e.grid_position.x
+        e.position.y = 100 + 24 * e.grid_position.y
     end
 end
 
