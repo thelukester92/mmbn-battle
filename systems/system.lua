@@ -29,4 +29,10 @@ end
 function System:update(dt)
 end
 
+function System:keypressed(key)
+end
+
+function System:keyreleased(key)
+end
+
 return System

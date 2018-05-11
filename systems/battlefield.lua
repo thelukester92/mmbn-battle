@@ -58,8 +58,8 @@ end
 
 function Battlefield:update(dt)
     for _, e in pairs(self.entities) do
-        e.position.x = 100 + 40 * e.grid_position.x
-        e.position.y = 100 + 24 * e.grid_position.y
+        e.position.x = 100 + 40 * (e.grid_position.x - 1) + e.grid_position.offset_x
+        e.position.y = 100 + 24 * (e.grid_position.y - 1) + e.grid_position.offset_y
     end
 end
 

@@ -16,16 +16,28 @@ function Renderer:accepts(e)
 end
 
 function Renderer:onAcceptedEntityAdded(e)
-    table.insert(self.entities, e)
+    self:insertOrdered(e)
     if self.textures[e.drawable.texture] == nil then
         self:loadTexture(e.drawable.texture)
     end
 end
 
+function Renderer:insertOrdered(e)
+    e.drawable.zIndex = e.drawable.zIndex or 0
+    for i = 1,#self.entities do
+        if e.drawable.zIndex < self.entities[i].drawable.zIndex then
+            table.insert(self.entities, i, e)
+            return
+        end
+    end
+    table.insert(self.entities, e)
+end
+
 function Renderer:draw()
     for _, e in pairs(self.entities) do
         local tex = self.textures[e.drawable.texture]
-        love.graphics.draw(tex.img, tex.quads[e.drawable.frame], e.position.x, e.position.y)
+        local quad = tex.quads[e.drawable.frame]
+        love.graphics.draw(tex.img, quad, e.position.x, e.position.y)
     end
 end
 
