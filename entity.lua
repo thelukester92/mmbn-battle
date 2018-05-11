@@ -1,20 +1,15 @@
-local Component = require('components.component')
-local ComponentFactory = require('components.factory')
-
 local Entity = {}
 Entity.__index = Entity
 
-function Entity:new(e)
+function Entity:new(comps)
     local o = {}
-    setmetatable(o, self)
-    o:load(e)
-    return o
-end
+    setmetatable(o, Entity)
 
-function Entity:load(e)
-    for type, props in pairs(e) do
-        self[type] = ComponentFactory:newComponent(type, props)
+    for type, comp in pairs(comps) do
+        o[type] = comp
     end
+
+    return o
 end
 
 function Entity:has(type)

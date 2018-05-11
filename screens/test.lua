@@ -1,6 +1,5 @@
 local Entity = require('entity')
 local Screen = require('screens.screen')
-
 local Renderer = require('systems.renderer')
 
 local TestScreen = {}

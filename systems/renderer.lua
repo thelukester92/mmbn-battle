@@ -1,5 +1,4 @@
 local System = require('systems.system')
-
 local Renderer = {}
 Renderer.__index = Renderer
 setmetatable(Renderer, System)
@@ -12,7 +11,6 @@ function Renderer:new()
 end
 
 function Renderer:accepts(e)
-    print(e:has('drawable'), e:has('position'))
     return e:has('drawable') and e:has('position')
 end
 
