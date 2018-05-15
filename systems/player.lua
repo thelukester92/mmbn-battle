@@ -48,8 +48,6 @@ end
 
 function Player:complete_move()
     self.player.drawable.anim = 'move_end'
-    -- self.player.drawable.anim_counter = 1
-    -- self.player.drawable.frame_counter = 1
 
     local key = self.key_pressed
     if key == 'up' then
