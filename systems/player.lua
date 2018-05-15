@@ -1,4 +1,3 @@
-local Entity = require('entity')
 local System = require('systems.system')
 
 local Player = {}
