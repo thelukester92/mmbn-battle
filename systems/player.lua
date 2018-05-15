@@ -15,6 +15,10 @@ function Player:load(world)
 end
 
 function Player:keypressed(key)
+    self.player.drawable.anim = 'move'
+    self.player.drawable.anim_counter = 1
+    self.player.drawable.frame_counter = 1
+
     if key == 'up' then
         self.player.grid_position.y = self.player.grid_position.y - 1
     elseif key == 'down' then

@@ -1,8 +1,10 @@
 # Components
 
 * `drawable`
-    * `width`: integer
-    * `height`: integer
+    * `texture`: string
+    * `frame`: string
+    * `anim`: string
+    * `zIndex`: integer
 * `grid_position`
     * `x`: integer
     * `y`: integer

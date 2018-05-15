@@ -17,6 +17,8 @@ end
 
 function Renderer:onAcceptedEntityAdded(e)
     self:insertOrdered(e)
+    e.drawable.anim_counter = 1
+    e.drawable.frame_counter = 1
     if self.textures[e.drawable.texture] == nil then
         self:loadTexture(e.drawable.texture)
     end
@@ -37,17 +39,38 @@ function Renderer:draw()
     for _, e in pairs(self.entities) do
         local tex = self.textures[e.drawable.texture]
         local quad = tex.quads[e.drawable.frame]
-        love.graphics.draw(tex.img, quad, e.position.x, e.position.y)
+        local offset = tex.offsets[e.drawable.frame]
+        local x = e.position.x + offset.x
+        local y = e.position.y + offset.y
+        love.graphics.draw(tex.img, quad, x, y)
+    end
+end
+
+function Renderer:update()
+    for _, e in pairs(self.entities) do
+        if e.drawable.anim ~= nil then
+            local tex = self.textures[e.drawable.texture]
+            if e.drawable.frame_counter == 5 then
+                e.drawable.frame_counter = 0
+                e.drawable.anim_counter = e.drawable.anim_counter + 1
+                if e.drawable.anim_counter > #tex.anims[e.drawable.anim] then
+                    e.drawable.anim_counter = #tex.anims[e.drawable.anim]
+                end
+                e.drawable.frame = tex.anims[e.drawable.anim][e.drawable.anim_counter]
+            end
+            e.drawable.frame_counter = e.drawable.frame_counter + 1
+        end
     end
 end
 
 function Renderer:loadTexture(texture)
     local meta = love.filesystem.load('resources/' .. texture .. '.lua')()
     local img = love.graphics.newImage('resources/' .. meta.texture)
-    local tex = {img=img, quads={}}
+    local tex = {img=img, anims=meta.anims, quads={}, offsets={}}
     for k, v in pairs(meta.frames) do
-        local x, y, w, h = unpack(v)
+        local x, y, w, h, ox, oy = unpack(v)
         tex.quads[k] = love.graphics.newQuad(x, y, w, h, img:getDimensions())
+        tex.offsets[k] = {x=ox or 0, y=oy or 0}
     end
     self.textures[texture] = tex
 end
