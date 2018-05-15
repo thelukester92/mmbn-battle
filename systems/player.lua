@@ -20,12 +20,11 @@ function Player:entity_added(e)
 end
 
 function Player:load(evt)
-    self.player = Entity:new{
+    self.player = evt.world:add_entity{
         drawable={texture='player', frame='idle', zIndex=1},
         grid_position={x=1, y=1, offset_x=3, offset_y=-24},
         position={x=0, y=0}
     }
-    evt.world:add_entity(self.player)
 end
 
 function Player:key(evt)
