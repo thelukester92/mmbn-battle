@@ -20,23 +20,23 @@ function TestScreen:new()
 end
 
 function TestScreen:load()
-    self.world:addEntity{load_event={world=self.world}}
+    self.world:add_entity{load_event={world=self.world}}
 end
 
 function TestScreen:draw()
-    self.world:addEntity{draw_event={}}
+    self.world:add_entity{draw_event={}}
 end
 
 function TestScreen:update(dt)
-    self.world:addEntity{update_event={dt=dt}}
+    self.world:add_entity{update_event={dt=dt}}
 end
 
 function TestScreen:keypressed(key)
-    self.world:addEntity{key_event={pressed=true, key=key}}
+    self.world:add_entity{key_event={pressed=true, key=key}}
 end
 
 function TestScreen:keyreleased(key)
-    self.world:addEntity{key_event={pressed=false, key=key}}
+    self.world:add_entity{key_event={pressed=false, key=key}}
 end
 
 return TestScreen

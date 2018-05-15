@@ -11,8 +11,8 @@ function Renderer:new()
     return o
 end
 
-function Renderer:entityAdded(e)
-    if e:hasAll('drawable', 'position') then
+function Renderer:entity_added(e)
+    if e:has_all('drawable', 'position') then
         self:insertOrdered(e)
         e.drawable.anim_counter = 1
         e.drawable.frame_counter = 1
@@ -69,7 +69,7 @@ function Renderer:update(dt)
                 if e.drawable.anim_counter == #tex.anims[e.drawable.anim] then
                     local anim = e.drawable.anim
                     e.drawable.anim = nil
-                    self.world:addEntity{anim_ended_event={entity=e, anim=anim}}
+                    self.world:add_entity{anim_ended_event={entity=e, anim=anim}}
                 end
             end
         end

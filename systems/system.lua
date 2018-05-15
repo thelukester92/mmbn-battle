@@ -7,7 +7,7 @@ function System:new()
     return o
 end
 
-function System:entityAdded(e)
+function System:entity_added(e)
 end
 
 return System

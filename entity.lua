@@ -16,7 +16,7 @@ function Entity:has(type)
     return self[type] ~= nil
 end
 
-function Entity:hasAny(...)
+function Entity:has_any(...)
     for _, type in pairs({...}) do
         if self:has(type) then
             return true
@@ -25,7 +25,7 @@ function Entity:hasAny(...)
     return false
 end
 
-function Entity:hasAll(...)
+function Entity:has_all(...)
     for _, type in pairs({...}) do
         if not self:has(type) then
             return false

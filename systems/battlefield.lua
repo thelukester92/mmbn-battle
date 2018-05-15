@@ -11,7 +11,7 @@ function Battlefield:new()
     return o
 end
 
-function Battlefield:entityAdded(e)
+function Battlefield:entity_added(e)
     if e:has('grid_position') then
         table.insert(self.entities, e)
     end
@@ -27,34 +27,34 @@ end
 
 function Battlefield:load(world)
     for _, x in pairs({100, 140, 180}) do
-        world:addEntity{
+        world:add_entity{
             drawable={texture='battlefield', frame='red_top'},
             position={x=x, y=100}
         }
 
-        world:addEntity{
+        world:add_entity{
             drawable={texture='battlefield', frame='red_med'},
             position={x=x, y=124}
         }
 
-        world:addEntity{
+        world:add_entity{
             drawable={texture='battlefield', frame='red_btm'},
             position={x=x, y=148}
         }
     end
 
     for _, x in pairs({220, 260, 300}) do
-        world:addEntity{
+        world:add_entity{
             drawable={texture='battlefield', frame='blu_top'},
             position={x=x, y=100}
         }
 
-        world:addEntity{
+        world:add_entity{
             drawable={texture='battlefield', frame='blu_med'},
             position={x=x, y=124}
         }
 
-        world:addEntity{
+        world:add_entity{
             drawable={texture='battlefield', frame='blu_btm'},
             position={x=x, y=148}
         }

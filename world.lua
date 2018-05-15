@@ -12,13 +12,13 @@ function World:new(systems)
     return o
 end
 
-function World:addEntity(e)
+function World:add_entity(e)
     if e.__index ~= Entity then
         e = Entity:new(e)
     end
     table.insert(self.entities, e)
     for _, system in pairs(self.systems) do
-        system:entityAdded(e)
+        system:entity_added(e)
     end
     return e
 end
