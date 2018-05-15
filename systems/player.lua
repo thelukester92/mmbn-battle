@@ -29,8 +29,6 @@ end
 function Player:key(evt)
     if evt.pressed and not self.busy and (evt.key == 'up' or evt.key == 'down' or evt.key == 'left' or evt.key == 'right') then
         self.player.drawable.anim = 'move_start'
-        self.player.drawable.anim_counter = 1
-        self.player.drawable.frame_counter = 1
         self.key_pressed = evt.key
         self.busy = true
     end
@@ -50,8 +48,8 @@ end
 
 function Player:complete_move()
     self.player.drawable.anim = 'move_end'
-    self.player.drawable.anim_counter = 1
-    self.player.drawable.frame_counter = 1
+    -- self.player.drawable.anim_counter = 1
+    -- self.player.drawable.frame_counter = 1
 
     local key = self.key_pressed
     if key == 'up' then

@@ -14,8 +14,6 @@ end
 function Renderer:entity_added(e)
     if e:has_all('drawable', 'position') then
         self:insertOrdered(e)
-        e.drawable.anim_counter = 1
-        e.drawable.frame_counter = 1
         if self.textures[e.drawable.texture] == nil then
             self:loadTexture(e.drawable.texture)
         end
@@ -58,8 +56,14 @@ end
 
 function Renderer:update(dt)
     local ticks_per_frame = 3
+    local events = {}
+
     for _, e in pairs(self.entities) do
         if e.drawable.anim ~= nil then
+            if e.drawable.anim ~= e.drawable.prev_anim then
+                e.drawable.anim_counter = 1
+                e.drawable.frame_counter = 1
+            end
             local tex = self.textures[e.drawable.texture]
             e.drawable.frame_counter = e.drawable.frame_counter + 1
             if e.drawable.frame_counter > ticks_per_frame then
@@ -67,12 +71,16 @@ function Renderer:update(dt)
                 e.drawable.anim_counter = e.drawable.anim_counter + 1
                 e.drawable.frame = tex.anims[e.drawable.anim][e.drawable.anim_counter]
                 if e.drawable.anim_counter == #tex.anims[e.drawable.anim] then
-                    local anim = e.drawable.anim
+                    table.insert(events, {anim_ended_event={entity=e, anim=e.drawable.anim}})
                     e.drawable.anim = nil
-                    self.world:add_entity{anim_ended_event={entity=e, anim=anim}}
                 end
             end
+            e.drawable.prev_anim = e.drawable.anim
         end
+    end
+
+    for _, evt in pairs(events) do
+        self.world:add_entity(evt)
     end
 end
 
