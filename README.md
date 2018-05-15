@@ -17,6 +17,9 @@
 
 ## Event Components
 
+* anim_ended_event
+    * entity
+    * anim
 * load_event
     * world
 * draw_event

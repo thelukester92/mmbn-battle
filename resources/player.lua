@@ -8,6 +8,7 @@ return {
         move_3={ 273, 373, 35, 48, -1, -4 }
     },
     anims={
-        move={ 'move_1', 'move_2', 'move_3', 'idle' }
+        move_start={ 'move_1', 'move_2', 'move_3' },
+        move_end={ 'move_3', 'move_2', 'move_1' }
     }
 }

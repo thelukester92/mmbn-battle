@@ -25,6 +25,10 @@ function Renderer:entityAdded(e)
         self:draw()
     end
 
+    if e:has('load_event') then
+        self.world = e.load_event.world
+    end
+
     if e:has('update_event') then
         self:update(e.update_event.dt)
     end
@@ -53,18 +57,21 @@ function Renderer:draw()
 end
 
 function Renderer:update(dt)
+    local ticks_per_frame = 3
     for _, e in pairs(self.entities) do
         if e.drawable.anim ~= nil then
             local tex = self.textures[e.drawable.texture]
-            if e.drawable.frame_counter == 5 then
+            e.drawable.frame_counter = e.drawable.frame_counter + 1
+            if e.drawable.frame_counter > ticks_per_frame then
                 e.drawable.frame_counter = 0
                 e.drawable.anim_counter = e.drawable.anim_counter + 1
-                if e.drawable.anim_counter > #tex.anims[e.drawable.anim] then
-                    e.drawable.anim_counter = #tex.anims[e.drawable.anim]
-                end
                 e.drawable.frame = tex.anims[e.drawable.anim][e.drawable.anim_counter]
+                if e.drawable.anim_counter == #tex.anims[e.drawable.anim] then
+                    local anim = e.drawable.anim
+                    e.drawable.anim = nil
+                    self.world:addEntity{anim_ended_event={entity=e, anim=anim}}
+                end
             end
-            e.drawable.frame_counter = e.drawable.frame_counter + 1
         end
     end
 end
