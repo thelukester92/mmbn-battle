@@ -9,8 +9,6 @@ local TestScreen = {}
 TestScreen.__index = TestScreen
 setmetatable(TestScreen, Screen)
 
--- todo: make these callbacks event handlers instead
-
 function TestScreen:new()
     local o = Screen.new(TestScreen)
     o.world = World:new{
