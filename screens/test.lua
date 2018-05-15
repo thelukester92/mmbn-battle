@@ -1,56 +1,44 @@
-local Entity = require('entity')
 local Screen = require('screens.screen')
 
 local Battlefield = require('systems.battlefield')
 local Player = require('systems.player')
 local Renderer = require('systems.renderer')
+local World = require('world')
 
 local TestScreen = {}
 TestScreen.__index = TestScreen
 setmetatable(TestScreen, Screen)
 
-function TestScreen:load()
-    self.entities = {}
-    self.systems = {
+-- todo: make these callbacks event handlers instead
+
+function TestScreen:new()
+    local o = Screen.new(TestScreen)
+    o.world = World:new{
         battlefield=Battlefield:new(),
         player=Player:new(),
         renderer=Renderer:new()
     }
+    return o
+end
 
-    for _, system in pairs(self.systems) do
-        system:load(self)
-    end
+function TestScreen:load()
+    self.world:addEntity{load_event={world=self.world}}
 end
 
 function TestScreen:draw()
-    for _, system in pairs(self.systems) do
-        system:draw()
-    end
+    self.world:addEntity{draw_event={}}
 end
 
 function TestScreen:update(dt)
-    for _, system in pairs(self.systems) do
-        system:update(dt)
-    end
+    self.world:addEntity{update_event={dt=dt}}
 end
 
 function TestScreen:keypressed(key)
-    for _, system in pairs(self.systems) do
-        system:keypressed(key)
-    end
+    self.world:addEntity{key_event={pressed=true, key=key}}
 end
 
 function TestScreen:keyreleased(key)
-    for _, system in pairs(self.systems) do
-        system:keyreleased(key)
-    end
-end
-
-function TestScreen:addEntity(e)
-    table.insert(self.entities, e)
-    for _, system in pairs(self.systems) do
-        system:onEntityAdded(e)
-    end
+    self.world:addEntity{key_event={pressed=false, key=key}}
 end
 
 return TestScreen

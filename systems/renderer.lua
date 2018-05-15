@@ -11,16 +11,22 @@ function Renderer:new()
     return o
 end
 
-function Renderer:accepts(e)
-    return e:has('drawable') and e:has('position')
-end
+function Renderer:entityAdded(e)
+    if e:hasAll('drawable', 'position') then
+        self:insertOrdered(e)
+        e.drawable.anim_counter = 1
+        e.drawable.frame_counter = 1
+        if self.textures[e.drawable.texture] == nil then
+            self:loadTexture(e.drawable.texture)
+        end
+    end
 
-function Renderer:onAcceptedEntityAdded(e)
-    self:insertOrdered(e)
-    e.drawable.anim_counter = 1
-    e.drawable.frame_counter = 1
-    if self.textures[e.drawable.texture] == nil then
-        self:loadTexture(e.drawable.texture)
+    if e:has('draw_event') then
+        self:draw()
+    end
+
+    if e:has('update_event') then
+        self:update(e.update_event.dt)
     end
 end
 
@@ -46,7 +52,7 @@ function Renderer:draw()
     end
 end
 
-function Renderer:update()
+function Renderer:update(dt)
     for _, e in pairs(self.entities) do
         if e.drawable.anim ~= nil then
             local tex = self.textures[e.drawable.texture]

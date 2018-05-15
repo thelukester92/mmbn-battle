@@ -5,6 +5,18 @@ local Player = {}
 Player.__index = Player
 setmetatable(Player, System)
 
+function Player:entityAdded(e)
+    if e:has('load_event') then
+        self:load(e.load_event.world)
+    end
+
+    if e:has('key_event') then
+        if e.key_event.pressed then
+            self:keypressed(e.key_event.key)
+        end
+    end
+end
+
 function Player:load(world)
     self.player = Entity:new{
         drawable={texture='player', frame='idle', zIndex=1},
