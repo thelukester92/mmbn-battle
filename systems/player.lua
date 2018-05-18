@@ -19,6 +19,7 @@ function Player:entity_added(e)
 end
 
 function Player:load(evt)
+    self.world = evt.world
     self.player = evt.world:add_entity{
         drawable={texture='player', frame='idle', zIndex=1},
         grid_position={x=1, y=1, offset_x=3, offset_y=-24},
@@ -35,6 +36,8 @@ function Player:key(evt)
         elseif evt.key == 'z' then
             self.player.drawable.frame = 'shoot'
             -- self.busy = true
+        elseif evt.key == 'x' then
+            self.world:add_entity{alter_grid_action={x=4,y=1,frame='red_top'}}
         end
     end
 end

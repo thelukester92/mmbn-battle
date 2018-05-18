@@ -31,19 +31,23 @@ function Battlefield:entity_added(e)
     end
 
     if e:has('load_event') then
-        self:load(e.load_event.world)
+        self:load(e.load_event)
     end
 
     if e:has('update_event') then
-        self:update(e.update_event.dt)
+        self:update(e.update_event)
+    end
+
+    if e:has('alter_grid_action') then
+        self:alter_grid(e.alter_grid_action)
     end
 end
 
-function Battlefield:load(world)
+function Battlefield:load(evt)
     for i, row in ipairs(self.init_config) do
         self.grid_entities[i] = {}
         for j, col in ipairs(row) do
-            self.grid_entities[i][j] = world:add_entity{
+            self.grid_entities[i][j] = evt.world:add_entity{
                 drawable={texture='battlefield', frame=col},
                 position={
                     x = self.origin.x + (j-1)*self.skip.x,
@@ -54,11 +58,15 @@ function Battlefield:load(world)
     end
 end
 
-function Battlefield:update(dt)
+function Battlefield:update(evt)
     for _, e in pairs(self.entities_on_grid) do
         e.position.x = self.origin.x + self.skip.x * (e.grid_position.x - 1) + e.grid_position.offset_x
         e.position.y = self.origin.y + self.skip.y * (e.grid_position.y - 1) + e.grid_position.offset_y
     end
+end
+
+function Battlefield:alter_grid(evt)
+    self.grid_entities[evt.y][evt.x].drawable.frame = evt.frame
 end
 
 return Battlefield

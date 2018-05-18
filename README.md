@@ -15,6 +15,13 @@
     * `x`: integer
     * `y`: integer
 
+## Action Components
+
+* alter_grid_action
+    * x
+    * y
+    * frame
+
 ## Event Components
 
 * anim_ended_event
