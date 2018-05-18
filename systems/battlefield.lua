@@ -38,8 +38,8 @@ function Battlefield:entity_added(e)
         self:update(e.update_event)
     end
 
-    if e:has('alter_grid_action') then
-        self:alter_grid(e.alter_grid_action)
+    if e:has('panel_grab_action') then
+        self:panel_grab(e.panel_grab_action)
     end
 end
 
@@ -65,8 +65,10 @@ function Battlefield:update(evt)
     end
 end
 
-function Battlefield:alter_grid(evt)
-    self.grid_entities[evt.y][evt.x].drawable.frame = evt.frame
+function Battlefield:panel_grab(evt)
+    local positions = {'_top', '_med', '_btm'}
+    self.grid_entities[evt.y][evt.x].drawable.frame = evt.color .. positions[evt.y]
+    print(evt.color .. positions[evt.y])
 end
 
 return Battlefield

@@ -17,10 +17,10 @@
 
 ## Action Components
 
-* alter_grid_action
+* panel_grab_action
     * x
     * y
-    * frame
+    * color
 
 ## Event Components
 

@@ -37,7 +37,7 @@ function Player:key(evt)
             self.player.drawable.frame = 'shoot'
             -- self.busy = true
         elseif evt.key == 'x' then
-            self.world:add_entity{alter_grid_action={x=4,y=1,frame='red_top'}}
+            self.world:add_entity{panel_grab_action={x=4,y=1,color='red'}}
         end
     end
 end
