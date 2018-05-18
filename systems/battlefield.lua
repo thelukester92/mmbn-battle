@@ -48,7 +48,9 @@ function Battlefield:load(evt)
         self.grid_entities[i] = {}
         for j, col in ipairs(row) do
             self.grid_entities[i][j] = evt.world:add_entity{
+                color={color=col:sub(1, 3)},
                 drawable={texture='battlefield', frame=col},
+                grid_panel={x=j, y=i},
                 position={
                     x = self.origin.x + (j-1)*self.skip.x,
                     y = self.origin.y + (i-1)*self.skip.y
@@ -67,6 +69,7 @@ end
 
 function Battlefield:alter_grid(evt)
     local positions = {'_top', '_med', '_btm'}
+    self.grid_entities[evt.y][evt.x].color.color = evt.color
     self.grid_entities[evt.y][evt.x].drawable.frame = evt.color .. positions[evt.y]
 end
 

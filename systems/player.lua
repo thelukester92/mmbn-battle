@@ -4,7 +4,20 @@ local Player = {}
 Player.__index = Player
 setmetatable(Player, System)
 
+function Player:new()
+    local o = System:new()
+    setmetatable(o, self)
+    o.grid_entities = {}
+    return o
+end
+
 function Player:entity_added(e)
+    if e:has('grid_panel') then
+        local gp = e.grid_panel
+        self.grid_entities[gp.y] = self.grid_entities[gp.y] or {}
+        self.grid_entities[gp.y][gp.x] = e
+    end
+
     if e:has('load_event') then
         self:load(e.load_event)
     end
@@ -21,6 +34,7 @@ end
 function Player:load(evt)
     self.world = evt.world
     self.player = evt.world:add_entity{
+        color={color='red'},
         drawable={texture='player', frame='idle', zIndex=1},
         grid_position={x=1, y=1, offset_x=3, offset_y=-24},
         position={x=0, y=0}
@@ -37,7 +51,13 @@ function Player:key(evt)
             self.player.drawable.frame = 'shoot'
             -- self.busy = true
         elseif evt.key == 'x' then
-            self.world:add_entity{alter_grid_action={x=4,y=1,color='red'}}
+            if self.grid_entities[1][self.player.grid_position.x+1] ~= nil then
+                self.world:add_entity{alter_grid_action={
+                    x=self.player.grid_position.x+1,
+                    y=self.player.grid_position.y,
+                    color='red'
+                }}
+            end
         end
     end
 end
@@ -56,10 +76,26 @@ function Player:anim_ended(evt)
 end
 
 function Player:valid_move(key)
-    return (key == 'up' and self.player.grid_position.y > 1)
-        or (key == 'down' and self.player.grid_position.y < 3)
-        or (key == 'left' and self.player.grid_position.x > 1)
-        or (key == 'right' and self.player.grid_position.x < 3)
+    local color = self.player.color.color
+    local grid = self.grid_entities
+    local gp = self.player.grid_position
+    local y, x = gp.y, gp.x
+
+    if key == 'up' then
+        y = y - 1
+    elseif key == 'down' then
+        y = y + 1
+    elseif key == 'left' then
+        x = x - 1
+    elseif key == 'right' then
+        x = x + 1
+    else
+        return false
+    end
+
+    return self.grid_entities[y] ~= nil
+        and self.grid_entities[y][x] ~= nil
+        and self.grid_entities[y][x].color.color == color
 end
 
 function Player:complete_move()
