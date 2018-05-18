@@ -27,16 +27,22 @@ function Player:load(evt)
 end
 
 function Player:key(evt)
-    if evt.pressed and not self.busy and (evt.key == 'up' or evt.key == 'down' or evt.key == 'left' or evt.key == 'right') then
-        self.player.drawable.anim = 'move_start'
-        self.key_pressed = evt.key
-        self.busy = true
+    if evt.pressed and not self.busy then
+        if self:valid_move(evt.key) then
+            self.player.drawable.anim = 'move_start'
+            self.key_pressed = evt.key
+            self.busy = true
+        elseif evt.key == 'z' then
+            self.player.drawable.frame = 'shoot'
+            -- self.busy = true
+        end
     end
 end
 
 function Player:anim_ended(evt)
     if evt.entity == self.player then
         if evt.anim == 'move_start' then
+            self.player.drawable.anim = 'move_end'
             self:complete_move()
         end
         if evt.anim == 'move_end' then
@@ -46,17 +52,21 @@ function Player:anim_ended(evt)
     end
 end
 
-function Player:complete_move()
-    self.player.drawable.anim = 'move_end'
+function Player:valid_move(key)
+    return (key == 'up' and self.player.grid_position.y > 1)
+        or (key == 'down' and self.player.grid_position.y < 3)
+        or (key == 'left' and self.player.grid_position.x > 1)
+        or (key == 'right' and self.player.grid_position.x < 3)
+end
 
-    local key = self.key_pressed
-    if key == 'up' then
+function Player:complete_move()
+    if self.key_pressed == 'up' then
         self.player.grid_position.y = self.player.grid_position.y - 1
-    elseif key == 'down' then
+    elseif self.key_pressed == 'down' then
         self.player.grid_position.y = self.player.grid_position.y + 1
-    elseif key == 'left' then
+    elseif self.key_pressed == 'left' then
         self.player.grid_position.x = self.player.grid_position.x - 1
-    elseif key == 'right' then
+    elseif self.key_pressed == 'right' then
         self.player.grid_position.x = self.player.grid_position.x + 1
     end
 end
