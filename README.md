@@ -17,7 +17,7 @@
 
 ## Action Components
 
-* panel_grab_action
+* alter_grid_action
     * x
     * y
     * color
