@@ -4,16 +4,30 @@ local Battlefield = {}
 Battlefield.__index = Battlefield
 setmetatable(Battlefield, System)
 
-function Battlefield:new()
+function Battlefield:new(options)
     local o = System:new()
     setmetatable(o, self)
-    o.entities = {}
+    options = options or {}
+
+    o.entities_on_grid = {}
+    o.grid_entities = {}
+    o.init_config = options.init_config or {
+        { 'red_top', 'red_top', 'red_top', 'blu_top', 'blu_top', 'blu_top' },
+        { 'red_med', 'red_med', 'red_med', 'blu_med', 'blu_med', 'blu_med' },
+        { 'red_btm', 'red_btm', 'red_btm', 'blu_btm', 'blu_btm', 'blu_btm' }
+    }
+    o.origin = {
+        x=options.origin_x or 100,
+        y=options.origin_y or 220
+    }
+    o.skip = { x=40, y=24 }
+
     return o
 end
 
 function Battlefield:entity_added(e)
     if e:has('grid_position') then
-        table.insert(self.entities, e)
+        table.insert(self.entities_on_grid, e)
     end
 
     if e:has('load_event') then
@@ -26,45 +40,24 @@ function Battlefield:entity_added(e)
 end
 
 function Battlefield:load(world)
-    for _, x in pairs({100, 140, 180}) do
-        world:add_entity{
-            drawable={texture='battlefield', frame='red_top'},
-            position={x=x, y=100}
-        }
-
-        world:add_entity{
-            drawable={texture='battlefield', frame='red_med'},
-            position={x=x, y=124}
-        }
-
-        world:add_entity{
-            drawable={texture='battlefield', frame='red_btm'},
-            position={x=x, y=148}
-        }
-    end
-
-    for _, x in pairs({220, 260, 300}) do
-        world:add_entity{
-            drawable={texture='battlefield', frame='blu_top'},
-            position={x=x, y=100}
-        }
-
-        world:add_entity{
-            drawable={texture='battlefield', frame='blu_med'},
-            position={x=x, y=124}
-        }
-
-        world:add_entity{
-            drawable={texture='battlefield', frame='blu_btm'},
-            position={x=x, y=148}
-        }
+    for i, row in ipairs(self.init_config) do
+        self.grid_entities[i] = {}
+        for j, col in ipairs(row) do
+            self.grid_entities[i][j] = world:add_entity{
+                drawable={texture='battlefield', frame=col},
+                position={
+                    x = self.origin.x + (j-1)*self.skip.x,
+                    y = self.origin.y + (i-1)*self.skip.y
+                }
+            }
+        end
     end
 end
 
 function Battlefield:update(dt)
-    for _, e in pairs(self.entities) do
-        e.position.x = 100 + 40 * (e.grid_position.x - 1) + e.grid_position.offset_x
-        e.position.y = 100 + 24 * (e.grid_position.y - 1) + e.grid_position.offset_y
+    for _, e in pairs(self.entities_on_grid) do
+        e.position.x = self.origin.x + self.skip.x * (e.grid_position.x - 1) + e.grid_position.offset_x
+        e.position.y = self.origin.y + self.skip.y * (e.grid_position.y - 1) + e.grid_position.offset_y
     end
 end
 
